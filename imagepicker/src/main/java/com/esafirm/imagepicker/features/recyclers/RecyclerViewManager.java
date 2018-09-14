@@ -57,8 +57,8 @@ public class RecyclerViewManager {
      * Set item size, column size base on the screen orientation
      */
     public void changeOrientation(int orientation) {
-        imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 3 : 5;
-        folderColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? 2 : 4;
+        imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? config.getPortraitImageColumns() : config.getLandscapeImageColumns();
+        folderColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? config.getPortraitFolderColumns() : config.getLandscapeFolderColumns();
 
         boolean shouldShowFolder = config.isFolderMode() && isDisplayingFolderView();
         int columns = shouldShowFolder ? folderColumns : imageColumns;
