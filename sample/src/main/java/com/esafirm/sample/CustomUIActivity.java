@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.ImagePickerFragment;
@@ -24,6 +27,7 @@ import com.esafirm.imagepicker.helper.LocaleManager;
 import com.esafirm.imagepicker.helper.ViewUtils;
 import com.esafirm.imagepicker.model.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,10 +38,14 @@ public class CustomUIActivity extends AppCompatActivity {
 
     private ActionBar actionBar;
     private ImageView photoPreview;
+    private LinearLayout pageLayout;
+    private FrameLayout imagePickerFragmentContainer;
     private ImagePickerFragment imagePickerFragment;
 
     private CameraOnlyConfig cameraOnlyConfig;
     private ImagePickerConfig config;
+    private ImagePickerInteractionListener listener;
+    private int selectedImageCount = 0;
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -53,7 +61,6 @@ public class CustomUIActivity extends AppCompatActivity {
         cameraOnlyConfig = getIntent().getExtras().getParcelable(CameraOnlyConfig.class.getSimpleName());
         setTheme(config.getTheme());
         setContentView(R.layout.activity_custom_ui);
-        setupView();
 
         if (savedInstanceState != null) {
             // The fragment has been restored.
@@ -66,10 +73,13 @@ public class CustomUIActivity extends AppCompatActivity {
             ft.replace(R.id.ef_imagepicker_fragment_placeholder, imagePickerFragment);
             ft.commit();
         }
+
         // For demonstration purposes, we're using a custom ImagePickerInteractionListener. Instead
         // of calling setInteractionListener, though, we could simply implement
         // ImagePickerInteractionListener in this class.
-        imagePickerFragment.setInteractionListener(new CustomInteractionListener());
+        listener = new CustomInteractionListener();
+        imagePickerFragment.setInteractionListener(listener);
+        setupView();
     }
 
     /**
@@ -150,6 +160,9 @@ public class CustomUIActivity extends AppCompatActivity {
         }
 
         photoPreview = findViewById(R.id.photo_preview);
+        imagePickerFragmentContainer = findViewById(R.id.ef_imagepicker_picker_container);
+        pageLayout = findViewById(R.id.page_layout);
+        listener.selectionChanged(new ArrayList<>());
     }
 
     class CustomInteractionListener implements ImagePickerInteractionListener {
@@ -167,11 +180,32 @@ public class CustomUIActivity extends AppCompatActivity {
         @Override
         public void selectionChanged(List<Image> imageList) {
             if (imageList.isEmpty()) {
-                photoPreview.setImageDrawable(null);
+                // When no images are currently selected, we remove the image preview (if present). In
+                // landscape mode, it was to the left of the picker, which means that we need to
+                // increase the number of columns when we're in landscape mode to 3.
+                // We skip this if there were never any selected images.
+                if (selectedImageCount > 0) {
+                    imagePickerFragment.setColumnNumbers(3, 5, 2, 4);
+                }
+                if (photoPreview.getParent() != null) {
+                    pageLayout.removeView(photoPreview);
+                }
             } else {
-                photoPreview.setImageBitmap(BitmapFactory.decodeFile(imageList.get(imageList.size() - 1).getPath()));
-
+                // When an image has been selected, and previously there was no image selected, we
+                // add the image preview. In landscape mode, we add it to the left of the picker, which
+                // means that we need to reduce the number of columns when we're in landscape mode to 3.
+                if (selectedImageCount == 0) {
+                    imagePickerFragment.setColumnNumbers(3, 3, 2, 2);
+                }
+                final Handler handler = new Handler();
+                if (photoPreview.getParent() == null) {
+                    pageLayout.addView(photoPreview, 0);
+                }
+                handler.postDelayed(() -> {
+                    photoPreview.setImageBitmap(BitmapFactory.decodeFile(imageList.get(imageList.size() - 1).getPath()));
+                }, 0);
             }
+            selectedImageCount = imageList.size();
         }
 
         @Override

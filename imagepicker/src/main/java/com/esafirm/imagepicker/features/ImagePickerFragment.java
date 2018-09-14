@@ -219,6 +219,23 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     }
 
     /**
+     * Set the columns for different configurations. Although it's possible to set these in the
+     * configuration before instantiating the Fragment, the containing Activity might want to change
+     * the layout, in which case we:
+     *  (a) update the Fragment's copy of the config, then
+     *  (b) immediately lay out the RecyclerView, in case a relevant value changed.
+     */
+    public void setColumnNumbers(
+            int portraitImageColumns, int landscapeImageColumns,
+            int portraitFolderColumns, int landscapeFolderColumns) {
+        config.setPortraitImageColumns(portraitImageColumns);
+        config.setLandscapeImageColumns(landscapeImageColumns);
+        config.setPortraitFolderColumns(portraitFolderColumns);
+        config.setLandscapeFolderColumns(landscapeFolderColumns);
+        onConfigurationChanged(getResources().getConfiguration());
+    }
+
+    /**
      * Config recyclerView when configuration changed
      */
     @Override
