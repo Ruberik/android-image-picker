@@ -23,6 +23,11 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
     private String doneButtonText;
     private int arrowColor = NO_COLOR;
 
+    private int portraitImageColumns = 3;
+    private int landscapeImageColumns = 5;
+    private int portraitFolderColumns = 2;
+    private int landscapeFolderColumns = 4;
+
     private int mode;
     private int limit;
     private int theme;
@@ -44,6 +49,38 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
 
     public void setArrowColor(int arrowColor) {
         this.arrowColor = arrowColor;
+    }
+
+    public int getPortraitImageColumns() {
+        return portraitImageColumns;
+    }
+
+    public void setPortraitImageColumns(int portraitImageColumns) {
+        this.portraitImageColumns = portraitImageColumns;
+    }
+
+    public int getLandscapeImageColumns() {
+        return landscapeImageColumns;
+    }
+
+    public void setLandscapeImageColumns(int landscapeImageColumns) {
+        this.landscapeImageColumns = landscapeImageColumns;
+    }
+
+    public int getPortraitFolderColumns() {
+        return portraitFolderColumns;
+    }
+
+    public void setPortraitFolderColumns(int portraitFolderColumns) {
+        this.portraitFolderColumns = portraitFolderColumns;
+    }
+
+    public int getLandscapeFolderColumns() {
+        return landscapeFolderColumns;
+    }
+
+    public void setLandscapeFolderColumns(int landscapeFolderColumns) {
+        this.landscapeFolderColumns = landscapeFolderColumns;
     }
 
     public int getMode() {
@@ -184,6 +221,10 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         dest.writeString(this.imageTitle);
         dest.writeString(this.doneButtonText);
         dest.writeInt(this.arrowColor);
+        dest.writeInt(this.portraitImageColumns);
+        dest.writeInt(this.landscapeImageColumns);
+        dest.writeInt(this.portraitFolderColumns);
+        dest.writeInt(this.landscapeFolderColumns);
         dest.writeInt(this.mode);
         dest.writeInt(this.limit);
         dest.writeInt(this.theme);
@@ -207,6 +248,10 @@ public class ImagePickerConfig extends BaseConfig implements Parcelable {
         this.imageTitle = in.readString();
         this.doneButtonText = in.readString();
         this.arrowColor = in.readInt();
+        this.portraitImageColumns = in.readInt();
+        this.landscapeImageColumns = in.readInt();
+        this.portraitFolderColumns = in.readInt();
+        this.landscapeFolderColumns = in.readInt();
         this.mode = in.readInt();
         this.limit = in.readInt();
         this.theme = in.readInt();

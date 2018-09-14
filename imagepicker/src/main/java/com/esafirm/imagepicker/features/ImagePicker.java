@@ -107,6 +107,26 @@ public abstract class ImagePicker {
         return this;
     }
 
+    public ImagePicker portraitImageColumns(int columns) {
+        config.setPortraitImageColumns(columns);
+        return this;
+    }
+
+    public ImagePicker landscapeImageColumns(int columns) {
+        config.setLandscapeImageColumns(columns);
+        return this;
+    }
+
+    public ImagePicker portraitFolderColumns(int columns) {
+        config.setPortraitFolderColumns(columns);
+        return this;
+    }
+
+    public ImagePicker landscapeFolderColumns(int columns) {
+        config.setLandscapeFolderColumns(columns);
+        return this;
+    }
+
     public ImagePicker limit(int count) {
         config.setLimit(count);
         return this;
