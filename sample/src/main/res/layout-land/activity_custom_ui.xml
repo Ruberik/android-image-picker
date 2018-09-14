@@ -16,19 +16,19 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/toolbar"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:animateLayoutChanges="true">
         <ImageView
             android:id="@+id/photo_preview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="50"
             android:contentDescription="Preview of selected photo"
             android:scaleType="fitCenter" />
         <FrameLayout
             android:id="@+id/ef_imagepicker_picker_container"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="50">
             <FrameLayout
                 android:id="@+id/ef_imagepicker_fragment_placeholder"
