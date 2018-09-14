@@ -106,6 +106,19 @@ public class RecyclerViewManager {
         return false;
     }
 
+    /**
+     * Scrolls to the last position that the user manually selected, or position 0 if the user
+     * hasn't selected anything. Ignores items that were pre-selected, and ignores items being
+     * de-selected.
+     */
+    public void scrollToLastSelectedPosition(boolean smooth) {
+        if (smooth) {
+            recyclerView.smoothScrollToPosition(imageAdapter.getLastSelectedPosition());
+        } else {
+            recyclerView.scrollToPosition(imageAdapter.getLastSelectedPosition());
+        }
+    }
+
     private boolean isDisplayingFolderView() {
         return recyclerView.getAdapter() == null || recyclerView.getAdapter() instanceof FolderPickerAdapter;
     }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,7 +13,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.ImagePickerFragment;
@@ -24,6 +27,7 @@ import com.esafirm.imagepicker.helper.LocaleManager;
 import com.esafirm.imagepicker.helper.ViewUtils;
 import com.esafirm.imagepicker.model.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,6 +38,8 @@ public class CustomUIActivity extends AppCompatActivity implements ImagePickerIn
 
     private ActionBar actionBar;
     private ImageView photoPreview;
+    private LinearLayout pageLayout;
+    private FrameLayout imagePickerFragmentContainer;
     private ImagePickerFragment imagePickerFragment;
 
     private CameraOnlyConfig cameraOnlyConfig;
@@ -146,6 +152,9 @@ public class CustomUIActivity extends AppCompatActivity implements ImagePickerIn
         }
 
         photoPreview = findViewById(R.id.photo_preview);
+        imagePickerFragmentContainer = findViewById(R.id.ef_imagepicker_picker_container);
+        pageLayout = findViewById(R.id.page_layout);
+        selectionChanged(new ArrayList<>());
     }
 
     /* --------------------------------------------------- */
@@ -165,10 +174,20 @@ public class CustomUIActivity extends AppCompatActivity implements ImagePickerIn
     @Override
     public void selectionChanged(List<Image> imageList) {
         if (imageList.isEmpty()) {
-            photoPreview.setImageDrawable(null);
+            if (photoPreview.getParent() != null) {
+                pageLayout.removeView(photoPreview);
+            }
         } else {
-            photoPreview.setImageBitmap(BitmapFactory.decodeFile(imageList.get(imageList.size() - 1).getPath()));
-
+            final Handler handler = new Handler();
+            if (photoPreview.getParent() == null) {
+                pageLayout.addView(photoPreview, 0);
+                handler.postDelayed(() -> {
+                    imagePickerFragment.scrollToLastSelectedPosition(true);
+                }, 0);
+            }
+            handler.postDelayed(() -> {
+                photoPreview.setImageBitmap(BitmapFactory.decodeFile(imageList.get(imageList.size() - 1).getPath()));
+            }, 0);
         }
     }
 

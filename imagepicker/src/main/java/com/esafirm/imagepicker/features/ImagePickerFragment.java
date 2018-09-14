@@ -203,6 +203,18 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     }
 
     /**
+     * Scrolls to the last position that the user manually selected, or position 0 if the user
+     * hasn't selected anything. Ignores items that were pre-selected, and ignores items being
+     * de-selected.
+     *
+     * This is helpful for handling layout changes. If your layout changes after the user selects
+     * an Image, it's helpful to be able to keep that selected image on-screen.
+     */
+    public void scrollToLastSelectedPosition(boolean smooth) {
+        recyclerViewManager.scrollToLastSelectedPosition(smooth);
+    }
+
+    /**
      * Config recyclerView when configuration changed
      */
     @Override

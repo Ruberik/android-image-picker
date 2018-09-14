@@ -24,6 +24,7 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
 
     private List<Image> images = new ArrayList<>();
     private List<Image> selectedImages = new ArrayList<>();
+    private int lastSelectedPosition = 0;
 
     private OnImageClickListener itemClickListener;
     private OnImageSelectedListener imageSelectedListener;
@@ -117,6 +118,7 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
         mutateSelection(() -> {
             selectedImages.add(image);
             notifyItemChanged(position);
+            lastSelectedPosition = position;
         });
     }
 
@@ -125,6 +127,10 @@ public class ImagePickerAdapter extends BaseListAdapter<ImagePickerAdapter.Image
             selectedImages.remove(image);
             notifyItemChanged(position);
         });
+    }
+
+    public int getLastSelectedPosition() {
+        return lastSelectedPosition;
     }
 
     public void removeAllSelectedSingleClick() {
