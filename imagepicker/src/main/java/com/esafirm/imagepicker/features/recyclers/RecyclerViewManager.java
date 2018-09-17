@@ -3,7 +3,6 @@ package com.esafirm.imagepicker.features.recyclers;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.Toast;
@@ -62,19 +61,22 @@ public class RecyclerViewManager {
         return layoutManager.onSaveInstanceState();
     }
 
+    public void refreshColumnNumber(int orientation) {
+        imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? config.getPortraitImageColumns() : config.getLandscapeImageColumns();
+        folderColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? config.getPortraitFolderColumns() : config.getLandscapeFolderColumns();
+        boolean shouldShowFolder = config.isFolderMode() && isDisplayingFolderView();
+        int columns = shouldShowFolder ? folderColumns : imageColumns;
+        setItemDecoration(columns);
+    }
+
     /**
      * Set item size, column size base on the screen orientation
      */
     public void changeOrientation(int orientation) {
-        imageColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? config.getPortraitImageColumns() : config.getLandscapeImageColumns();
-        folderColumns = orientation == Configuration.ORIENTATION_PORTRAIT ? config.getPortraitFolderColumns() : config.getLandscapeFolderColumns();
-
-        boolean shouldShowFolder = config.isFolderMode() && isDisplayingFolderView();
-        int columns = shouldShowFolder ? folderColumns : imageColumns;
-        layoutManager = new GridLayoutManager(context, columns);
+        layoutManager = new GridLayoutManager(context, 1);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        setItemDecoration(columns);
+        refreshColumnNumber(orientation);
     }
 
     public void setupAdapters(ArrayList<Image> selectedImages, OnImageClickListener onImageClickListener, OnFolderClickListener onFolderClickListener) {

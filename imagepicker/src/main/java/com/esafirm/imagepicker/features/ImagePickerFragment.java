@@ -232,7 +232,7 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
         config.setLandscapeImageColumns(landscapeImageColumns);
         config.setPortraitFolderColumns(portraitFolderColumns);
         config.setLandscapeFolderColumns(landscapeFolderColumns);
-        onConfigurationChanged(getResources().getConfiguration());
+        recyclerViewManager.refreshColumnNumber(getResources().getConfiguration().orientation);
     }
 
     /**
