@@ -146,6 +146,7 @@ public class ImagePickerActivity extends AppCompatActivity implements ImagePicke
     @Override
     public void setTitle(String title) {
         actionBar.setTitle(title);
+        supportInvalidateOptionsMenu();
     }
 
     @Override
