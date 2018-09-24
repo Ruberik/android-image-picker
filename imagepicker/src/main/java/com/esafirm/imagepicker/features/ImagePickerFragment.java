@@ -101,13 +101,6 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
 
         setupComponents();
 
-        if (interactionListener == null) {
-            throw new RuntimeException("ImagePickerFragment needs an " +
-                    "ImagePickerInteractionListener. This will be set automatically if the " +
-                    "activity implements ImagePickerInteractionListener, and can be set manually " +
-                    "with fragment.setInteractionListener(listener).");
-        }
-
         if (savedInstanceState != null) {
             presenter.setCameraModule((DefaultCameraModule) savedInstanceState.getSerializable(STATE_KEY_CAMERA_MODULE));
         }
@@ -130,7 +123,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
                     setupRecyclerView(config, savedInstanceState.getParcelableArrayList(STATE_KEY_SELECTED_IMAGES));
                     recyclerViewManager.onRestoreState(savedInstanceState.getParcelable(STATE_KEY_RECYCLER));
                 }
-                interactionListener.selectionChanged(recyclerViewManager.getSelectedImages());
+                if (interactionListener != null) {
+                    interactionListener.selectionChanged(recyclerViewManager.getSelectedImages());
+                }
                 return result;
             }
         }
@@ -160,7 +155,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
 
         recyclerViewManager.setImageSelectedListener(selectedImage -> {
             updateTitle();
-            interactionListener.selectionChanged(recyclerViewManager.getSelectedImages());
+            if (interactionListener != null) {
+                interactionListener.selectionChanged(recyclerViewManager.getSelectedImages());
+            }
             if (ConfigUtils.shouldReturn(config, false) && !selectedImage.isEmpty()) {
                 onDone();
             }
@@ -207,7 +204,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     }
 
     private void updateTitle() {
-        interactionListener.setTitle(recyclerViewManager.getTitle());
+        if (interactionListener != null) {
+            interactionListener.setTitle(recyclerViewManager.getTitle());
+        }
     }
 
     /**
@@ -312,7 +311,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
                 if (isCameraOnly) {
                     Toast.makeText(getActivity().getApplicationContext(),
                             getString(R.string.ef_msg_no_camera_permission), Toast.LENGTH_SHORT).show();
-                    interactionListener.cancel();
+                    if (interactionListener != null) {
+                        interactionListener.cancel();
+                    }
                 } else {
                     snackBarView.show(R.string.ef_msg_no_camera_permission, v -> openAppSettings());
                 }
@@ -343,7 +344,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
                 }
                 logger.e("Permission not granted: results len = " + grantResults.length +
                         " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-                interactionListener.cancel();
+                if (interactionListener != null) {
+                    interactionListener.cancel();
+                }
             }
             break;
             case RC_PERMISSION_REQUEST_CAMERA: {
@@ -354,7 +357,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
                 }
                 logger.e("Permission not granted: results len = " + grantResults.length +
                         " Result code = " + (grantResults.length > 0 ? grantResults[0] : "(empty)"));
-                interactionListener.cancel();
+                if (interactionListener != null) {
+                    interactionListener.cancel();
+                }
                 break;
             }
             default: {
@@ -387,7 +392,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
                 presenter.finishCaptureImage(getActivity(), data, getBaseConfig());
             } else if (resultCode == RESULT_CANCELED && isCameraOnly) {
                 presenter.abortCaptureImage();
-                interactionListener.cancel();
+                if (interactionListener != null) {
+                    interactionListener.cancel();
+                }
             }
         }
     }
@@ -504,7 +511,9 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     public void finishPickImages(List<Image> images) {
         Intent data = new Intent();
         data.putParcelableArrayListExtra(IpCons.EXTRA_SELECTED_IMAGES, (ArrayList<? extends Parcelable>) images);
-        interactionListener.finishPickImages(data);
+        if (interactionListener != null) {
+            interactionListener.finishPickImages(data);
+        }
     }
 
     @Override
