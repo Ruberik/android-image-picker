@@ -116,6 +116,11 @@ public class RecyclerViewManager {
         return false;
     }
 
+    public void clearSelection() {
+        checkAdapterIsInitialized();
+        imageAdapter.removeAllSelectedSingleClick();
+    }
+
     private boolean isDisplayingFolderView() {
         return recyclerView.getAdapter() == null || recyclerView.getAdapter() instanceof FolderPickerAdapter;
     }

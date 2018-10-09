@@ -87,20 +87,18 @@ public class CustomUIActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(com.esafirm.imagepicker.R.menu.ef_image_picker_menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_custom_ui, menu);
         return true;
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        MenuItem menuCamera = menu.findItem(com.esafirm.imagepicker.R.id.menu_camera);
-        if (menuCamera != null) {
-            if (config != null) {
-                menuCamera.setVisible(config.isShowCamera());
-            }
+        MenuItem menuClear = menu.findItem(R.id.menu_clear);
+        if (menuClear != null) {
+            menuClear.setVisible(selectedImageCount > 0);
         }
 
-        MenuItem menuDone = menu.findItem(com.esafirm.imagepicker.R.id.menu_done);
+        MenuItem menuDone = menu.findItem(R.id.menu_done);
         if (menuDone != null) {
             menuDone.setTitle(ConfigUtils.getDoneButtonText(this, config));
             menuDone.setVisible(imagePickerFragment.isShowDoneButton());
@@ -119,12 +117,12 @@ public class CustomUIActivity extends AppCompatActivity {
             onBackPressed();
             return true;
         }
-        if (id == com.esafirm.imagepicker.R.id.menu_done) {
+        if (id == R.id.menu_done) {
             imagePickerFragment.onDone();
             return true;
         }
-        if (id == com.esafirm.imagepicker.R.id.menu_camera) {
-            imagePickerFragment.captureImageWithPermission();
+        if (id == R.id.menu_clear) {
+            imagePickerFragment.clearSelection();
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -236,6 +236,13 @@ public class ImagePickerFragment extends Fragment implements ImagePickerView {
     }
 
     /**
+     * Clears the current selection.
+     */
+    public void clearSelection() {
+        recyclerViewManager.clearSelection();
+    }
+
+    /**
      * Config recyclerView when configuration changed
      */
     @Override
