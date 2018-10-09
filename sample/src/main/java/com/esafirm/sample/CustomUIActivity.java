@@ -17,6 +17,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.esafirm.imagepicker.features.ImagePickerConfig;
 import com.esafirm.imagepicker.features.ImagePickerFragment;
 import com.esafirm.imagepicker.features.ImagePickerInteractionListener;
@@ -27,6 +29,7 @@ import com.esafirm.imagepicker.helper.LocaleManager;
 import com.esafirm.imagepicker.helper.ViewUtils;
 import com.esafirm.imagepicker.model.Image;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -184,6 +187,9 @@ public class CustomUIActivity extends AppCompatActivity {
                 // We skip this if there were never any selected images.
                 if (selectedImageCount > 0) {
                     imagePickerFragment.setColumnNumbers(3, 5, 2, 4);
+                    Glide.with(photoPreview)
+                            .load((Drawable)null)
+                            .into(photoPreview);
                 }
                 if (photoPreview.getParent() != null) {
                     pageLayout.removeView(photoPreview);
@@ -200,7 +206,10 @@ public class CustomUIActivity extends AppCompatActivity {
                     pageLayout.addView(photoPreview, 0);
                 }
                 handler.postDelayed(() -> {
-                    photoPreview.setImageBitmap(BitmapFactory.decodeFile(imageList.get(imageList.size() - 1).getPath()));
+                    Glide.with(photoPreview)
+                            .load(new File(imageList.get(imageList.size() - 1).getPath()))
+                            .apply(RequestOptions.placeholderOf(photoPreview.getDrawable()))
+                            .into(photoPreview);
                 }, 0);
             }
             selectedImageCount = imageList.size();
