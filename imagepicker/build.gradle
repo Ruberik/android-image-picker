@@ -6,7 +6,7 @@ android {
     final sdk = rootProject.ext.sdk
 
     compileSdkVersion sdk.compileSdk
-    buildToolsVersion sdk.buildTools
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion sdk.minSdk
@@ -50,8 +50,8 @@ dependencies {
     implementation "com.github.bumptech.glide:glide:$glideVersion"
 
     final supportLibraryVersion = '27.1.1'
-    implementation "com.android.support:recyclerview-v7:$supportLibraryVersion"
-    implementation("com.android.support:appcompat-v7:$supportLibraryVersion") {
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
+    implementation('androidx.appcompat:appcompat:1.0.0') {
         exclude module: 'animated-vector-drawable'
         exclude module: 'support-media-compat'
     }

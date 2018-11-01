@@ -4,7 +4,7 @@ android {
     final sdk = rootProject.ext.sdk
 
     compileSdkVersion sdk.compileSdk
-    buildToolsVersion sdk.buildTools
+    buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion sdk.minSdk
@@ -37,7 +37,7 @@ dependencies {
 
     final glideVersion = '4.5.0'
     implementation "com.github.bumptech.glide:glide:$glideVersion"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
 
     /* Development */
     implementation project(':rximagepicker')
