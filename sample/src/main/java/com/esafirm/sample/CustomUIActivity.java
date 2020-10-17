@@ -13,6 +13,8 @@ import android.os.Bundle;
 import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -49,6 +51,13 @@ public class CustomUIActivity extends AppCompatActivity {
     private ImagePickerConfig config;
     private ImagePickerInteractionListener listener;
     private int selectedImageCount = 0;
+    private boolean shown = true;
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("shown", shown);
+    }
 
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -67,6 +76,7 @@ public class CustomUIActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             // The fragment has been restored.
+            shown = savedInstanceState.getBoolean("shown");
             IpLogger.getInstance().e("Fragment has been restored");
             imagePickerFragment = (ImagePickerFragment) getSupportFragmentManager().findFragmentById(R.id.ef_imagepicker_fragment_placeholder);
         } else {
@@ -164,6 +174,25 @@ public class CustomUIActivity extends AppCompatActivity {
         imagePickerFragmentContainer = findViewById(R.id.ef_imagepicker_picker_container);
         pageLayout = findViewById(R.id.page_layout);
         listener.selectionChanged(new ArrayList<>());
+
+        Button showHideButton = findViewById(R.id.show_hide_button);
+        showHideButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) photoPreview.getLayoutParams();
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                if (shown) {
+                    layoutParams.weight = 0;
+                    ft.hide(imagePickerFragment);
+                } else {
+                    layoutParams.weight = 50;
+                    ft.show(imagePickerFragment);
+                }
+                photoPreview.setLayoutParams(layoutParams);
+                ft.commit();
+                shown = !shown;
+            }
+        });
     }
 
     class CustomInteractionListener implements ImagePickerInteractionListener {
